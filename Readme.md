@@ -6,8 +6,9 @@ CronNET is a simple C# library for running tasks based on a cron schedule.
 Cron Schedules
 ===============
 
-CronNET supports most cron scheduling.
+CronNET supports most cron scheduling.  See tests for supported formats.
 
+```
 *    *    *    *    *  
 ┬    ┬    ┬    ┬    ┬
 │    │    │    │    │
@@ -17,13 +18,16 @@ CronNET supports most cron scheduling.
 │    │    └─────────────── day of month (1 - 31)
 │    └──────────────────── hour (0 - 23)
 └───────────────────────── min (0 - 59)
+```
 
+```
   `* * * * *`        Every minute.
   `0 * * * *`        Top of every hour.
   `0,1,2 * * * *`    Every hour at minutes 0, 1, and 2.
   `*/2 * * * *`      Every two minutes.
   `1-55 * * * *`     Every minute through the 55th minute.
   `* 1,10,20 * * *`  Every 1st, 10th, and 20th hours.
+```
 
 Console Example
 ===============
