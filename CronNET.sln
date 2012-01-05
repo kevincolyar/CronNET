@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNET", "CronNET\CronNET.csproj", "{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNETTests", "CronNETTests\CronNETTests.csproj", "{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Cron;
+using CronNET;
 using MbUnit.Framework;
 
 namespace CronTests

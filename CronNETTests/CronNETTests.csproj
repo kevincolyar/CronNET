@@ -38,9 +38,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CronDaemon\Cron.csproj">
+    <ProjectReference Include="..\CronNET\CronNET.csproj">
       <Project>{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}</Project>
-      <Name>Cron</Name>
+      <Name>CronNET</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
