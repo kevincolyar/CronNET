@@ -16,16 +16,20 @@ namespace CronNET
             _thread = new Thread(thread_start);
         }
 
+        private object _lock = new object();
         public void execute(DateTime date_time)
         {
-            if (!_cron_schedule.is_time(date_time))
-                return;
+            lock (_lock)
+            {
+                if (!_cron_schedule.isTime(date_time))
+                    return;
 
-            if (_thread.ThreadState == ThreadState.Running)
-                return;
+                if (_thread.ThreadState == ThreadState.Running)
+                    return;
 
-             _thread = new Thread(_thread_start);
-             _thread.Start(); 
+                _thread = new Thread(_thread_start);
+                _thread.Start();
+            }
         }
 
         public void abort()

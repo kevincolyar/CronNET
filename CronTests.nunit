@@ -1,0 +1,6 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Default" />
+  <Config name="Default" binpathtype="Auto">
+    <assembly path="CronNETTests\bin\Debug\CronTests.dll" />
+  </Config>
+</NUnitProject>

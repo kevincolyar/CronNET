@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNET", "CronNET\CronNET.csproj", "{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNETTests", "CronNETTests\CronNETTests.csproj", "{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}"

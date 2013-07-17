@@ -1,30 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Timers;
+using System.Threading;
 
 namespace CronNET
 {
     public class CronDaemon
     {
-        private readonly Timer timer = new Timer(60000);
+        private readonly System.Timers.Timer timer = new System.Timers.Timer(30000);
         private readonly List<CronJob> cron_jobs = new List<CronJob>();
+        private DateTime _last= DateTime.Now;
 
         public CronDaemon()
         {
+            timer.AutoReset = true;
             timer.Elapsed += timer_elapsed;
         }
 
-        public void add_job(CronJob cron_job)
+        public void AddJob(string schedule, ThreadStart action)
         {
-           cron_jobs.Add(cron_job); 
+            var cj = new CronJob(schedule, action);
+            cron_jobs.Add(cj);
         }
 
-        public void start()
+        public void Start()
         {
             timer.Start();
         }
 
-        public void stop()
+        public void Stop()
         {
             timer.Stop();
 
@@ -34,8 +38,12 @@ namespace CronNET
 
         private void timer_elapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (CronJob job in cron_jobs)
-                job.execute(DateTime.Now);
+            if (DateTime.Now.Minute != _last.Minute)
+            {
+                _last = DateTime.Now;
+                foreach (CronJob job in cron_jobs)
+                    job.execute(DateTime.Now);
+            }
         }
     }
 }
