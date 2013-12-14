@@ -5,10 +5,17 @@ using System.Threading;
 
 namespace CronNET
 {
-    public class CronDaemon
+    public interface ICronDaemon
+    {
+        void AddJob(string schedule, ThreadStart action);
+        void Start();
+        void Stop();
+    }
+
+    public class CronDaemon : ICronDaemon
     {
         private readonly System.Timers.Timer timer = new System.Timers.Timer(30000);
-        private readonly List<CronJob> cron_jobs = new List<CronJob>();
+        private readonly List<ICronJob> cron_jobs = new List<ICronJob>();
         private DateTime _last= DateTime.Now;
 
         public CronDaemon()
@@ -41,7 +48,7 @@ namespace CronNET
             if (DateTime.Now.Minute != _last.Minute)
             {
                 _last = DateTime.Now;
-                foreach (CronJob job in cron_jobs)
+                foreach (ICronJob job in cron_jobs)
                     job.execute(DateTime.Now);
             }
         }
