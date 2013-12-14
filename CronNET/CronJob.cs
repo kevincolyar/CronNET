@@ -3,9 +3,15 @@ using System.Threading;
 
 namespace CronNET
 {
-    public class CronJob
+    public interface ICronJob
     {
-        private readonly CronSchedule _cron_schedule = new CronSchedule();
+        void execute(DateTime date_time);
+        void abort();
+    }
+
+    public class CronJob : ICronJob
+    {
+        private readonly ICronSchedule _cron_schedule = new CronSchedule();
         private readonly ThreadStart _thread_start;
         private Thread _thread;
 

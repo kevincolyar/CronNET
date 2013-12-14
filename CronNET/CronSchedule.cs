@@ -4,7 +4,13 @@ using System.Text.RegularExpressions;
 
 namespace CronNET
 {
-    public class CronSchedule
+    public interface ICronSchedule
+    {
+        bool isValid(string expression);
+        bool isTime(DateTime date_time);
+    }
+
+    public class CronSchedule : ICronSchedule
     {
         #region Readonly Class Members
 
