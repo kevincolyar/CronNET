@@ -16,12 +16,20 @@ namespace CronNET
     {
         private readonly System.Timers.Timer timer = new System.Timers.Timer(30000);
         private readonly List<ICronJob> cron_jobs = new List<ICronJob>();
-        private DateTime _last= DateTime.Now;
+        private DateTime _last = DateTime.Now;
+        private int _timezone_offset = 0;
 
         public CronDaemon()
         {
             timer.AutoReset = true;
             timer.Elapsed += timer_elapsed;
+        }
+
+        public CronDaemon(int timezoneOffset)
+        {
+            timer.AutoReset = true;
+            timer.Elapsed += timer_elapsed;
+            _timezone_offset = timezoneOffset;
         }
 
         public void AddJob(string schedule, ThreadStart action)
@@ -49,7 +57,7 @@ namespace CronNET
             {
                 _last = DateTime.Now;
                 foreach (ICronJob job in cron_jobs)
-                    job.execute(DateTime.Now);
+                    job.execute(DateTime.UtcNow.AddHours(_timezone_offset));
             }
         }
     }
