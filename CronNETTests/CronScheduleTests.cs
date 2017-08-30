@@ -181,12 +181,15 @@ namespace CronTests
         }
 
         [Test]
-        public static void ppp()
+        public static void JobMustStartWithinTwoMinutes()
         {
+            var ss = new SemaphoreSlim(1);
+            ss.Wait(0);
             var d = new CronDaemon();
-            d.AddJob("*/1 * * * *", () => { Console.WriteLine(DateTime.Now.ToString()); });
+            d.AddJob("*/1 * * * *", () => { ss.Release(); });
             d.Start();
-            //Thread.Sleep(60 * 1000);
+            Assert.IsTrue(ss.Wait(TimeSpan.FromMinutes(2)));
+            ss.Release();
         }
     }
 }
