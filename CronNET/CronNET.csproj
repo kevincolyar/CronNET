@@ -43,6 +43,9 @@
     <Compile Include="CronDaemon.cs" />
     <Compile Include="CronJob.cs" />
     <Compile Include="CronSchedule.cs" />
+    <Compile Include="Interfaces\ICronSchedule.cs" />
+    <Compile Include="Interfaces\ICronDaemon.cs" />
+    <Compile Include="Interfaces\ICronJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

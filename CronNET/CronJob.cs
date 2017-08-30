@@ -1,47 +1,42 @@
 using System;
 using System.Threading;
+using CronNET.Interfaces;
 
 namespace CronNET
 {
-    public interface ICronJob
-    {
-        void execute(DateTime date_time);
-        void abort();
-    }
-
     public class CronJob : ICronJob
     {
-        private readonly ICronSchedule _cron_schedule = new CronSchedule();
-        private readonly ThreadStart _thread_start;
+        private readonly ICronSchedule _cronSchedule;
+
+        private readonly object _lock = new object();
+        private readonly ThreadStart _threadStart;
         private Thread _thread;
 
-        public CronJob(string schedule, ThreadStart thread_start)
+        public CronJob(string schedule, ThreadStart threadStart)
         {
-            _cron_schedule = new CronSchedule(schedule);
-            _thread_start = thread_start;
-            _thread = new Thread(thread_start);
+            _cronSchedule = new CronSchedule(schedule);
+            _threadStart = threadStart;
+            _thread = new Thread(threadStart);
         }
 
-        private object _lock = new object();
-        public void execute(DateTime date_time)
+        public void Execute(DateTime dateTime)
         {
             lock (_lock)
             {
-                if (!_cron_schedule.isTime(date_time))
+                if (!_cronSchedule.IsTime(dateTime))
                     return;
 
                 if (_thread.ThreadState == ThreadState.Running)
                     return;
 
-                _thread = new Thread(_thread_start);
+                _thread = new Thread(_threadStart);
                 _thread.Start();
             }
         }
 
-        public void abort()
+        public void Abort()
         {
-          _thread.Abort();  
+            _thread.Abort();
         }
-
     }
 }
