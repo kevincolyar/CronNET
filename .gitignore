@@ -22,6 +22,8 @@ local.properties
 .settings/
 .loadpath
 
+.vs/
+
 # External tool builders
 .externalToolBuilders/
 

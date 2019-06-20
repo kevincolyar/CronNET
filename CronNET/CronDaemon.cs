@@ -1,56 +1,88 @@
+using CronNET.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Timers;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace CronNET
 {
-    public interface ICronDaemon
-    {
-        void AddJob(string schedule, ThreadStart action);
-        void Start();
-        void Stop();
-    }
-
     public class CronDaemon : ICronDaemon
     {
-        private readonly System.Timers.Timer timer = new System.Timers.Timer(30000);
-        private readonly List<ICronJob> cron_jobs = new List<ICronJob>();
-        private DateTime _last= DateTime.Now;
+        private readonly System.Timers.Timer _timer;
+        private readonly List<ICronJob> _cronJobs;
+        private CancellationToken _cancellationToken;
+
+        public event EventHandler<string> JobExecuting;
+        public event EventHandler<string> JobExecuted;
 
         public CronDaemon()
         {
-            timer.AutoReset = true;
-            timer.Elapsed += timer_elapsed;
+            _cronJobs = new List<ICronJob>();
+            _timer = new System.Timers.Timer(1000 * 60);
+            _timer.Elapsed += TimerElapsed;
+            _timer.Enabled = true;
         }
 
-        public void AddJob(string schedule, ThreadStart action)
+        public void Add(CronJob job)
         {
-            var cj = new CronJob(schedule, action);
-            cron_jobs.Add(cj);
+            job.JobExecuted += Job_JobExecuted;
+            job.JobExecuting += Job_JobExecuting;
+            _cronJobs.Add(job);
         }
 
-        public void Start()
+        private void Job_JobExecuting(object sender, string name)
         {
-            timer.Start();
+            JobExecuting?.Invoke(sender, name);
+        }
+
+        private void Job_JobExecuted(object sender, string name)
+        {
+            JobExecuted?.Invoke(sender, name);
+        }
+
+        public void Start(CancellationToken cancellationToken)
+        {
+            _cancellationToken = cancellationToken;
+            _cancellationToken.Register(Stop);
+
+            _timer.Start();
         }
 
         public void Stop()
         {
-            timer.Stop();
-
-            foreach (CronJob job in cron_jobs)
-                job.abort();
+            _timer.Stop();
         }
 
-        private void timer_elapsed(object sender, ElapsedEventArgs e)
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (DateTime.Now.Minute != _last.Minute)
-            {
-                _last = DateTime.Now;
-                foreach (ICronJob job in cron_jobs)
-                    job.execute(DateTime.Now);
-            }
+            Parallel.ForEach(_cronJobs, job => job.ExecuteAsync(DateTime.Now, _cancellationToken));
+        }
+
+        public void Remove(string name)
+        {
+            var job = _cronJobs.First(x => x.Name == name);
+
+            if (job != null)
+                _cronJobs.Remove(job);
+        }
+
+        public void Remove(CronJob job)
+        {
+            _cronJobs.Remove(job);
+        }
+
+        public void Clear()
+        {
+            _cronJobs.Clear();
+        }
+
+        public Task RunAsync(Func<Task> func, CancellationToken cancellationToken, string name)
+        {
+            JobExecuting?.Invoke(this, name);
+
+            return Task.Run(func, cancellationToken).ContinueWith(x => JobExecuted?.Invoke(this, name));
         }
     }
 }

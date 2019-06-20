@@ -1,47 +1,46 @@
+using CronNET.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CronNET
 {
-    public interface ICronJob
-    {
-        void execute(DateTime date_time);
-        void abort();
-    }
-
     public class CronJob : ICronJob
     {
-        private readonly ICronSchedule _cron_schedule = new CronSchedule();
-        private readonly ThreadStart _thread_start;
-        private Thread _thread;
+        private ICollection<ICronSchedule> _cronSchedules;
+        private Func<Task> _func;
 
-        public CronJob(string schedule, ThreadStart thread_start)
-        {
-            _cron_schedule = new CronSchedule(schedule);
-            _thread_start = thread_start;
-            _thread = new Thread(thread_start);
-        }
+        internal event EventHandler<string> JobExecuted;
+        internal event EventHandler<string> JobExecuting;
 
-        private object _lock = new object();
-        public void execute(DateTime date_time)
+        public string Name { get; private set; }
+
+        public CronJob(Func<Task> func, string name, params string[] cronPatterns)
         {
-            lock (_lock)
+            Name = name;
+            _func = func;
+            _cronSchedules = new List<ICronSchedule>();
+
+            foreach (var item in cronPatterns)
             {
-                if (!_cron_schedule.isTime(date_time))
-                    return;
-
-                if (_thread.ThreadState == ThreadState.Running)
-                    return;
-
-                _thread = new Thread(_thread_start);
-                _thread.Start();
+                _cronSchedules.Add(new CronSchedule(item));
             }
         }
 
-        public void abort()
+        public Task ExecuteAsync(DateTime dateTime, CancellationToken cancellationToken)
         {
-          _thread.Abort();  
-        }
+            foreach (var cronSchedule in _cronSchedules)
+            {
+                if (!cronSchedule.IsTime(dateTime))
+                    continue;
 
+                JobExecuting?.Invoke(this, Name);
+
+                return Task.Run(_func, cancellationToken).ContinueWith(x => JobExecuted?.Invoke(this, Name));
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
