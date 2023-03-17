@@ -68,6 +68,8 @@ local.properties
 *.vspscc
 .builds
 *.dotCover
+.[vV][sS]/
+.[nN]uget/
 
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
 packages/
