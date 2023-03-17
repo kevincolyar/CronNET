@@ -29,6 +29,11 @@ CronNET supports most cron scheduling.  See tests for supported formats.
   `* 1,10,20 * * *`  Every 1st, 10th, and 20th hours.
 ```
 
+How to install?
+===============
+
+You can install this [NuGet package](https://www.nuget.org/packages/Iminetsoft.CronNET)
+
 Console Example
 ===============
 
