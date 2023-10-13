@@ -10,11 +10,7 @@
 		<PackageProjectUrl>https://github.com/tycoff/crondotnet</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tycoff/crondotnet</RepositoryUrl>
 		<PackageTags>dotnet Cron Crondaemon Crontab</PackageTags>
-		<Version>0.1.0.0</Version>
+		<Version>0.1.2.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="..\Readme.md" Pack="true" PackagePath="\"/>
-	</ItemGroup>
 </Project>

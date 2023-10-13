@@ -52,13 +52,20 @@ namespace crondotnet
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await timer.WaitForNextTickAsync(cancellationToken);
-
-                if (!cancellationToken.IsCancellationRequested && DateTime.Now.Minute != _last.Minute)
+                try
                 {
-                    _last = DateTime.Now;
-                    foreach (ICronJob job in cronJobs)
-                        job.Execute(DateTime.Now, cancellationToken);
+                    await timer.WaitForNextTickAsync(cancellationToken);
+
+                    if (!cancellationToken.IsCancellationRequested && DateTime.Now.Minute != _last.Minute)
+                    {
+                        _last = DateTime.Now;
+                        foreach (ICronJob job in cronJobs)
+                            job.Execute(DateTime.Now, cancellationToken);
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
                 }
             }
         }
