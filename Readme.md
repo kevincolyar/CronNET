@@ -1,12 +1,12 @@
-CronNET
+crondotnet
 ---------------------------
 
-CronNET is a simple C# library for running tasks based on a cron schedule.
+crondotnet is a simple C# library for running tasks based on a cron schedule.
 
 Cron Schedules
 ===============
 
-CronNET supports most cron scheduling.  See tests for supported formats.
+crondotnet supports most cron scheduling.  See tests for supported formats.
 
 ```
 *    *    *    *    *  
@@ -32,14 +32,14 @@ CronNET supports most cron scheduling.  See tests for supported formats.
 How to install?
 ===============
 
-You can install this [NuGet package](https://www.nuget.org/packages/Iminetsoft.CronNET)
+You can install this [NuGet package](https://www.nuget.org/packages/crondotnet)
 
 Console Example
 ===============
 
 ``` c#
 using System.Threading;
-using CronNET;
+using crondotnet;
 
 namespace CronNETExample.Console
 {
@@ -69,7 +69,7 @@ Windows Service Example
 
 ``` c#
 using System.Threading;
-using CronNET;
+using crondotnet;
 
 namespace CronNETExample.WindowsService
 {
