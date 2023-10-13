@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6;net7</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <RootNamespace>crondotnet</RootNamespace>
+    <AssemblyName>crondotnet</AssemblyName>
+    <Authors>kevinkolyar, iminet, tycoff</Authors>
+    <Product>C# library for running cron jobs on .NET</Product>
+    <PackageId>crondotnet</PackageId>
+    <PackageProjectUrl>https://github.com/tycoff/crondotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tycoff/crondotnet</RepositoryUrl>
+    <PackageTags>dotnet Cron Crondaemon Crontab</PackageTags>
+  </PropertyGroup>
+</Project>
