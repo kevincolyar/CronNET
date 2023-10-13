@@ -1,18 +1,21 @@
 ﻿using crondotnet;
 using crondotnet.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class CronServiceProverExtensions
     {
-        public static IServiceCollection AddCron(this IServiceCollection services, Action<ICronDaemonOptionsBuilder>? optionsAction = null)
+        public static IServiceCollection AddCron(this IServiceCollection services, Action<ICronDaemonOptionsBuilder>? cronBuilder = null)
         {
-            services.AddSingleton<CronDaemonHostedService>();
+            services.AddHostedService<CronDaemonHostedService>();
             services.AddScoped<ICronDaemon, CronDaemon>();
 
-            var cronDaemonOptionsBuilder = new CronDaemonOptionsBuilder();
-            optionsAction?.Invoke(cronDaemonOptionsBuilder);
-            services.ConfigureOptions(cronDaemonOptionsBuilder.Build());
+            var cronDaemonOptionsBuilder = new CronDaemonOptionsBuilder(services);
+            cronBuilder?.Invoke(cronDaemonOptionsBuilder);
+            
+            services.AddOptions<CronDaemonOptions>()
+                .Configure(options => cronDaemonOptionsBuilder.Bind(options));
 
             return services;
         }
@@ -27,11 +30,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
     public class CronDaemonOptionsBuilder : ICronDaemonOptionsBuilder
     {
-        private readonly CronDaemonOptions Options = new CronDaemonOptions();
+        private readonly List<JobOptions> Jobs = new List<JobOptions>();
+        private IServiceCollection services;
+
+        public CronDaemonOptionsBuilder(IServiceCollection services)
+        {
+            this.services = services;
+        }
 
         public ICronDaemonOptionsBuilder AddJob(string cronExpression, ExecuteCronJob job)
         {
-            Options.Jobs.Add(new JobOptions
+            Jobs.Add(new JobOptions
             {
                 Expression = cronExpression,
                 StaticTask = job
@@ -43,18 +52,23 @@ namespace Microsoft.Extensions.DependencyInjection
         public ICronDaemonOptionsBuilder AddJob<TService>(string cronExpression)
             where TService : IThinService
         {
-            Options.Jobs.Add(new JobOptions
+            Jobs.Add(new JobOptions
             {
                 Expression = cronExpression,
                 ServiceType = typeof(TService),
             });
 
+            services.TryAddScoped(typeof(TService));
+
             return this;
         }
 
-        internal CronDaemonOptions Build()
+        internal void Bind(CronDaemonOptions options)
         {
-            return Options;
+            foreach (var job in Jobs)
+            {
+                options.Jobs.Add(job);
+            }
         }
     }
 }

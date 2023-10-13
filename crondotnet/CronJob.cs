@@ -25,12 +25,19 @@ namespace crondotnet
 
         public async Task Execute(DateTime startTime, CancellationToken cancellationToken)
         {
-            await _semaphore.WaitAsync(cancellationToken);
+            try
+            {
+                await _semaphore.WaitAsync(cancellationToken);
 
-            if (!_cronSchedule.IsTime(startTime))
-                return;
+                if (!_cronSchedule.IsTime(startTime))
+                    return;
 
-            await _threadStart(cancellationToken);
+                await _threadStart(cancellationToken);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
     }
 }

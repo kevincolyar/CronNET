@@ -16,7 +16,6 @@ namespace crondotnet
     {
         private readonly PeriodicTimer timer;
         private readonly List<ICronJob> cronJobs = new List<ICronJob>();
-        private DateTime _last = DateTime.Now;
         private CancellationTokenSource tokenSource = null;
         private Task timerTask = null;
 
@@ -50,18 +49,27 @@ namespace crondotnet
 
         private async Task InternalStart(CancellationToken cancellationToken)
         {
+            var currentTime = DateTime.Now;
+            var targetTime = currentTime.Date.AddHours(currentTime.Hour).AddMinutes(currentTime.Minute + 1);
+                    // .AddSeconds(currentTime.Second + (30 - (currentTime.Second % 30))); // If we wanted to increase resolution, this would allow for specify second targetting.
+
+            DateTime? lastRun = null;
+
+            // wait until the next 30 second interval before starting to trigger.
+            await Task.Delay(targetTime - currentTime);
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    await timer.WaitForNextTickAsync(cancellationToken);
-
-                    if (!cancellationToken.IsCancellationRequested && DateTime.Now.Minute != _last.Minute)
+                    if (!cancellationToken.IsCancellationRequested && (!lastRun.HasValue || DateTime.Now.Minute != lastRun.Value.Minute))
                     {
-                        _last = DateTime.Now;
+                        lastRun = DateTime.Now;
                         foreach (ICronJob job in cronJobs)
-                            job.Execute(DateTime.Now, cancellationToken);
+                            job.Execute(lastRun.Value, cancellationToken);
                     }
+
+                    await timer.WaitForNextTickAsync(cancellationToken);
                 }
                 catch (TaskCanceledException)
                 {
