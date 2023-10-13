@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace CronNET
+namespace crondotnet
 {
     public interface ICronSchedule
     {
-        bool isValid(string expression);
-        bool isTime(DateTime date_time);
+        bool IsValid(string expression);
+        bool IsTime(DateTime date_time);
     }
 
     public class CronSchedule : ICronSchedule
@@ -41,26 +41,26 @@ namespace CronNET
 
         public CronSchedule(string expressions)
         {
-            this._expression = expressions;
-            generate();
+            _expression = expressions;
+            Generate();
         }
 
         #endregion
 
         #region Public Methods
 
-        private bool isValid()
+        private bool IsValid()
         {
-            return isValid(this._expression);
+            return IsValid(_expression);
         }
 
-        public bool isValid(string expression)
+        public bool IsValid(string expression)
         {
             MatchCollection matches = validation_regex.Matches(expression);
             return matches.Count > 0;//== 5;
         }
 
-        public bool isTime(DateTime date_time)
+        public bool IsTime(DateTime date_time)
         {
             return minutes.Contains(date_time.Minute) &&
                    hours.Contains(date_time.Hour) &&
@@ -69,11 +69,11 @@ namespace CronNET
                    days_of_week.Contains((int)date_time.DayOfWeek);
         }
 
-        private void generate()
+        private void Generate()
         {
-            if (!isValid()) return;
+            if (!IsValid()) return;
 
-            MatchCollection matches = validation_regex.Matches(this._expression);
+            MatchCollection matches = validation_regex.Matches(_expression);
 
             generate_minutes(matches[0].ToString());
 
@@ -81,17 +81,17 @@ namespace CronNET
                 generate_hours(matches[1].ToString());
             else
                 generate_hours("*");
-            
+
             if (matches.Count > 2)
                 generate_days_of_month(matches[2].ToString());
             else
                 generate_days_of_month("*");
-            
+
             if (matches.Count > 3)
                 generate_months(matches[3].ToString());
             else
                 generate_months("*");
-            
+
             if (matches.Count > 4)
                 generate_days_of_weeks(matches[4].ToString());
             else
@@ -100,27 +100,27 @@ namespace CronNET
 
         private void generate_minutes(string match)
         {
-            this.minutes = generate_values(match, 0, 60);
+            minutes = generate_values(match, 0, 60);
         }
 
         private void generate_hours(string match)
         {
-            this.hours = generate_values(match, 0, 24);
+            hours = generate_values(match, 0, 24);
         }
 
         private void generate_days_of_month(string match)
         {
-            this.days_of_month = generate_values(match, 1, 32);
+            days_of_month = generate_values(match, 1, 32);
         }
 
         private void generate_months(string match)
         {
-            this.months = generate_values(match, 1, 13);
+            months = generate_values(match, 1, 13);
         }
 
         private void generate_days_of_weeks(string match)
         {
-            this.days_of_week = generate_values(match, 0, 7);
+            days_of_week = generate_values(match, 0, 7);
         }
 
         private List<int> generate_values(string configuration, int start, int max)
@@ -207,5 +207,15 @@ namespace CronNET
         }
 
         #endregion
+
+        public static implicit operator CronSchedule(string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                return null;
+            }
+
+            return new CronSchedule(pattern);
+        }
     }
 }

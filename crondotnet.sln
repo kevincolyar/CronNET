@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33027.164
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNET", "CronNET\CronNET.csproj", "{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crondotnet", "crondotnet\crondotnet.csproj", "{F31D7AF3-FDFA-44F1-9C63-305BAF11D002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronNETTests", "CronNETTests\CronNETTests.csproj", "{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crondotnet.Tests", "crondotnet.Tests\crondotnet.Tests.csproj", "{6FCFBDF4-ECB7-4FC2-A376-E962B11D487D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

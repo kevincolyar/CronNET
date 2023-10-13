@@ -1,29 +1,26 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using CronNET;
-using NUnit.Framework;
 using System.Threading;
 
-
-namespace CronTests
+namespace crondotnet.Tests
 {
     [TestFixture]
     public class CronScheduleTests
     {
-
         [Test]
         public void is_valid_test()
         {
             var cron_schedule = new CronSchedule();
-            Assert.IsTrue(cron_schedule.isValid("*/2"));
-            Assert.IsTrue(cron_schedule.isValid("* * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("0 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("0,1,2 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("*/2 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("1-4 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("1-55/3 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("1,10,20 * * * *"));
-            Assert.IsTrue(cron_schedule.isValid("* 1,10,20 * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("*/2"));
+            Assert.IsTrue(cron_schedule.IsValid("* * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("0 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("0,1,2 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("*/2 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("1-4 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("1-55/3 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("1,10,20 * * * *"));
+            Assert.IsTrue(cron_schedule.IsValid("* 1,10,20 * * *"));
         }
 
         [Test]
@@ -116,76 +113,76 @@ namespace CronTests
         public void is_time_minute_test()
         {
             var cron_schedule = new CronSchedule("0 * * * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("8:00 am")));
-            Assert.IsFalse(cron_schedule.isTime(DateTime.Parse("8:01 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("8:00 am")));
+            Assert.IsFalse(cron_schedule.IsTime(DateTime.Parse("8:01 am")));
 
             cron_schedule = new CronSchedule("0-10 * * * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("8:00 am")));
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("8:03 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("8:00 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("8:03 am")));
 
             cron_schedule = new CronSchedule("*/2 * * * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("8:00 am")));
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("8:02 am")));
-            Assert.IsFalse(cron_schedule.isTime(DateTime.Parse("8:03 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("8:00 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("8:02 am")));
+            Assert.IsFalse(cron_schedule.IsTime(DateTime.Parse("8:03 am")));
         }
 
         [Test]
         public void is_time_hour_test()
         {
             var cron_schedule = new CronSchedule("* 0 * * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("12:00 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("12:00 am")));
 
             cron_schedule = new CronSchedule("* 0,12 * * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("12:00 am")));
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("12:00 pm")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("12:00 am")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("12:00 pm")));
         }
 
         [Test]
         public void is_time_day_of_month_test()
         {
             var cron_schedule = new CronSchedule("* * 1 * *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("2010/08/01")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("2010/08/01")));
         }
 
         [Test]
         public void is_time_month_test()
         {
             var cron_schedule = new CronSchedule("* * * 1 *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("1/1/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("1/1/2008")));
 
             cron_schedule = new CronSchedule("* * * 12 *");
-            Assert.IsFalse(cron_schedule.isTime(DateTime.Parse("1/1/2008")));
+            Assert.IsFalse(cron_schedule.IsTime(DateTime.Parse("1/1/2008")));
 
             cron_schedule = new CronSchedule("* * * */3 *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("3/1/2008")));
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("6/1/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("3/1/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("6/1/2008")));
         }
 
         [Test]
         public void is_time_day_of_week_test()
         {
             var cron_schedule = new CronSchedule("* * * * 0");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("10/12/2008")));
-            Assert.IsFalse(cron_schedule.isTime(DateTime.Parse("10/13/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("10/12/2008")));
+            Assert.IsFalse(cron_schedule.IsTime(DateTime.Parse("10/13/2008")));
 
             cron_schedule = new CronSchedule("* * * * */2");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("10/14/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("10/14/2008")));
         }
 
         [Test]
         public void is_time_test()
         {
             var cron_schedule = new CronSchedule("0 0 12 10 *");
-            Assert.IsTrue(cron_schedule.isTime(DateTime.Parse("12:00:00 am 10/12/2008")));
-            Assert.IsFalse(cron_schedule.isTime(DateTime.Parse("12:01:00 am 10/12/2008")));
+            Assert.IsTrue(cron_schedule.IsTime(DateTime.Parse("12:00:00 am 10/12/2008")));
+            Assert.IsFalse(cron_schedule.IsTime(DateTime.Parse("12:01:00 am 10/12/2008")));
         }
 
         [Test]
         public static void ppp()
         {
             var d = new CronDaemon();
-            d.AddJob("*/1 * * * *", () => { Console.WriteLine(DateTime.Now.ToString()); });
-            d.Start();
+            d.AddJob("*/1 * * * *", async (token) => { Console.WriteLine(DateTime.Now.ToString()); });
+            d.StartAsync(CancellationToken.None);
             //Thread.Sleep(60 * 1000);
         }
     }
